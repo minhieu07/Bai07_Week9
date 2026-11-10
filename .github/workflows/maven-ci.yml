@@ -1,0 +1,33 @@
+name: Automated Code Review
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request: # Kích hoạt khi có Pull Request
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and Test
+        run: mvn clean verify
+
+      # Action tự động review code (Inline Feedback)
+      - name: Run Checkstyle
+        uses: dbelyaev/action-checkstyle@master
+        if: github.event_name == 'pull_request'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
