@@ -128,6 +128,6 @@ public class Bank {
         for (Customer customer : copyList) {
             sb.append(customer.getCustomerInfo()).append("\n");
         }
-        return sb.toString().trim();
+        return sb.toString().trim()
     }
 }
